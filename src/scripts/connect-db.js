@@ -1,4 +1,3 @@
-// Connexion à la base de données (adaptée pour environnements multiples)
 import { Client } from "pg";
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -16,7 +15,7 @@ const client = isProduction
       password: "postgres",
     });
 
-let db: Client;
+let db;
 
 // Fonction pour initialiser la connexion à la base de données
 export async function connectToDB() {
@@ -29,27 +28,3 @@ export async function connectToDB() {
   }
   return db;
 }
-
-// Fonction pour exécuter une requête SQL
-export async function executeQuery(
-  query: string,
-  params?: (string | number | boolean | Date | null | number[])[],
-) {
-  await connectToDB();
-
-  try {
-    // Si des paramètres sont fournis, utiliser une requête paramétrée
-    // Sinon, exécuter la requête brute
-    if (params) {
-      return await db.query(query, params);
-    } else {
-      return await db.query(query);
-    }
-  } catch (error) {
-    console.error("Erreur lors de l'exécution de la requête:", error);
-    throw error;
-  }
-}
-
-// Export de l'instance db pour une utilisation directe
-export { db };
